@@ -10,6 +10,7 @@ export default class AuthServices {
     
     login = async (identifier: string, password: string) => {
         try {
+            console.log(identifier, password, typeof identifier);
             let user;
             if (identifier.includes('@')) {
                 user = await this.UsersRepository.getUserByEmail(identifier);
