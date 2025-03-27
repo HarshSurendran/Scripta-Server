@@ -10,15 +10,14 @@ export default class AuthServices {
     
     login = async (identifier: string, password: string) => {
         try {
-            console.log(identifier, password, typeof identifier);
             let user;
             if (identifier.includes('@')) {
                 user = await this.UsersRepository.getUserByEmail(identifier);
-                if (!user) throw new AppError('User not found', HttpStatus.NOT_FOUND);
+                if (!user) throw new AppError('User not found', HttpStatus.UNAUTHORIZED);
                
             } else {
                 user = await this.UsersRepository.getUserByPhone(Number(identifier));
-                if (!user) throw new AppError('User not found', HttpStatus.NOT_FOUND);
+                if (!user) throw new AppError('User not found', HttpStatus.UNAUTHORIZED);
             }
 
             const isPasswordValid = await bcrypt.compare(password, user.password);

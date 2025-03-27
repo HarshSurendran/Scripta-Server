@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import AuthServices from "../services/auth.services";
 import { successResponse } from "../../../utils/response.utils";
 import { HttpStatus } from "../../../enums/httpStatus";
-import { AppError } from "../../../middlewares/error.middleware";
 
 export default class AuthControllers {
     constructor(private AuthServices: AuthServices) { }
@@ -38,5 +37,4 @@ export default class AuthControllers {
             next(error);
         }
     }
-
 }
