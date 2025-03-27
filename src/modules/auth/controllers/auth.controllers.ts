@@ -7,10 +7,14 @@ import { AppError } from "../../../middlewares/error.middleware";
 export default class AuthControllers {
     constructor(private AuthServices: AuthServices) { }
     
-    login = async (req: Request, res: Response) => {
-        const { identifier, password } = req.body;
-        const response = await this.AuthServices.login(identifier, password);
-        return res.json(response);
+    login = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { identifier, password } = req.body;
+            const response = await this.AuthServices.login(identifier, password);
+            return res.status(HttpStatus.OK).cookie("userToken", response.token).json(successResponse("User logged in successfully", response.user));
+        } catch (error) {
+            next(error);
+        }
     }
 
     signup = async (req: Request, res: Response, next: NextFunction) => {        
