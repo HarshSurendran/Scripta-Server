@@ -5,6 +5,7 @@ import express from 'express';
 import {errorHandler} from './middlewares/error.middleware';
 import logger from './utils/logger.utils';
 import ArticlesRouter from './modules/articles/routes/articles.routes';
+import AuthRouter from './modules/auth/routes/auth.routes';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/v1/articles", ArticlesRouter);
+app.use("/api/v1/auth", AuthRouter);
 
 app.use("/", (req, res) => {    
     res.send("Hello World");

@@ -14,13 +14,12 @@ class AppError extends Error {
     }
 }
 
-const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-    let error = { ...err };
-    error.message = err.message;
+const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
+    error.message = error.message;
 
     logger.error({
         message: error.message,
-        stack: err.stack,
+        stack: error.stack,
         method: req.method,
         path: req.path,
         body: req.body,
