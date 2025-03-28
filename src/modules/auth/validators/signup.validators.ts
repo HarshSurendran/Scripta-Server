@@ -7,4 +7,4 @@ export const signupSchema = joi.object({
     phone: joi.number().required(),
     dob: joi.date().required(),
     password: joi.string().required(),
-})
+});
