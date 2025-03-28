@@ -34,7 +34,7 @@ export default class ArticlesRepository {
 
     getArticles = async (data: string[] ) => {
         try {
-            return await articlesModels.find({category: {$in: data}}).populate('author', "firstName lastName email phone image");            
+            return await articlesModels.find({category: {$in: data}}).populate('author', "firstName lastName shortName email phone image");            
         } catch (error) {
             if (error instanceof Error) {
                 console.error(`Error getting articles: ${error.message}`);

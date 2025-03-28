@@ -45,6 +45,8 @@ export default class AuthServices {
             const hashedPass = await bcrypt.hash(formData.password, 10);
             formData.password = hashedPass;
 
+            formData.shortName = (formData.firstName.charAt(0) + formData.lastName.charAt(0)).toUpperCase();
+
             const userDocument = await this.UsersRepository.createUser(formData);
             const user = userDocument.toObject();
             delete user.password;
