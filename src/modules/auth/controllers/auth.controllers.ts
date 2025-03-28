@@ -14,7 +14,7 @@ export default class AuthControllers {
                 httpOnly: true,       
                 secure: false,      
                 sameSite: 'lax'
-            }).json(successResponse("User logged in successfully", response.user));
+            }).json(successResponse("User logged in successfully", { user: response.user, userToken: response.token }));
         } catch (error) {
             next(error);
         }
@@ -23,7 +23,7 @@ export default class AuthControllers {
     signup = async (req: Request, res: Response, next: NextFunction) => {        
        try {
          const response = await this.AuthServices.signup(req.body);
-         res.status(HttpStatus.CREATED).cookie("userToken", response.token).json(successResponse("User created successfully", response.user));
+           res.status(HttpStatus.CREATED).cookie("userToken", response.token).json(successResponse("User created successfully", { user: response.user, userToken: response.token }));
        } catch (error) {
            next(error);          
        }

@@ -2,7 +2,7 @@ import { CreateUser } from "../dtos/createUser.dtos";
 import usersModels from "../models/users.models";
 
 
-export class UsersRepository {
+export default class UsersRepository {
     createUser = async (data: CreateUser) => {
         try {
             const user = new usersModels(data);
@@ -20,8 +20,7 @@ export class UsersRepository {
 
     updateUser = async (id: string, data: Partial<CreateUser>) => {
         try {
-            const user = await usersModels.findOneAndUpdate({ _id: id }, data, { new: true });
-            return user;            
+            return await usersModels.findOneAndUpdate({ _id: id }, data, { new: true });           
         } catch (error) {
             if (error instanceof Error) {
                 console.error(`Error creating user: ${error.message}`);

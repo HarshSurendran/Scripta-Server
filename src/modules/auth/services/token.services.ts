@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export class TokenServices{
+export default class TokenServices{
     private tokenSecret: string = process.env.TOKEN_SECRET!;
 
     generateToken(payload: any) {

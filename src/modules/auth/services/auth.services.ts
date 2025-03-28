@@ -1,6 +1,6 @@
 import { CreateUser } from "../../users/dtos/createUser.dtos";
-import { UsersRepository } from "../../users/repositories/users.repository";
-import { TokenServices } from "./token.services";
+import UsersRepository from "../../users/repositories/users.repository";
+import TokenServices  from "./token.services";
 import { AppError } from "../../../middlewares/error.middleware"
 import { HttpStatus } from "../../../enums/httpStatus";
 import bcrypt from 'bcrypt';
