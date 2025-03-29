@@ -14,21 +14,53 @@ export default class ArticlesServices {
         }
     }
 
-    deleteArticle = async (id: string) => {
+    getArticles = async (data: string[], userId: string) => {
         try {
-            return await this.ArticlesRepository.delete(id);
+            return await this.ArticlesRepository.getArticles(data, userId);
         } catch (error) {
             throw error;
         }
-    }
+    };
 
-    getArticles = async (data: string[]) => {
+    getUserArticles = async (userId: string) => {
         try {
-            return await this.ArticlesRepository.getArticles(data);
+            return await this.ArticlesRepository.getUserArticles(userId);
         } catch (error) {
             throw error;
         }
-    }
+    };
+
+    updateArticle = async (articleId: string, userId: string, data: Partial<ICreateArticles>) => {
+        try {
+            const article = await this.ArticlesRepository.getById(articleId);
+            if (article.author.toString() !== userId) {
+                throw new Error('You are not authorized to update this article');
+            }
+            return await this.ArticlesRepository.update(articleId, data);
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    deleteArticle = async (articleId: string, userId: string) => {
+        try {
+            const article = await this.ArticlesRepository.getById(articleId);
+            if (article.author.toString() !== userId) {
+                throw new Error('You are not authorized to delete this article');
+            }
+            return await this.ArticlesRepository.delete(articleId);
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    likeAndDislikeArticle = async (articleId: string, userId:string, data: {}) => {
+        try {
+            return await this.ArticlesRepository.likeAndDislikeArticle(articleId,userId, data);
+        } catch (error) {
+            throw error;
+        }
+    };
     
     
 }

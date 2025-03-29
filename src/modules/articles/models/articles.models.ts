@@ -20,6 +20,8 @@ const ArticlesSchema: Schema = new Schema({
     author: { type: Types.ObjectId, ref: 'User', required: true },
     likes: { type: Number, default: 0 },
     dislikes: { type: Number, default: 0 },
+    likedBy: { type: [Types.ObjectId], ref: 'User', default: [] },
+    dislikedBy: { type: [Types.ObjectId], ref: 'User', default: [] },
 });
 
 export default mongoose.model<IArticles>('Articles', ArticlesSchema);
