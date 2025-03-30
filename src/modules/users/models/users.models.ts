@@ -13,16 +13,19 @@ export interface IUser extends Document {
     image?: string;
 }
 
-const UserSchema: Schema = new Schema({
-    firstName: {type: String, required: true},
-    lastName: { type: String, required: true },
-    shortName: { type: String, required: true },
-    email: {type: String, required: true, unique: true},
-    phone: {type: Number, required: true, unique: true},
-    dob: {type: Date , required: true},
-    password: { type: String, required: true},
-    interestedCategories:{type: [String], default: []},    
-    image: { type: String, default: "" }, 
-});
+const UserSchema: Schema = new Schema(
+    {
+        firstName: { type: String, required: true },
+        lastName: { type: String, required: true },
+        shortName: { type: String, required: true },
+        email: { type: String, required: true, unique: true },
+        phone: { type: Number, required: true, unique: true },
+        dob: { type: Date, required: true },
+        password: { type: String, required: true },
+        interestedCategories: { type: [String], default: [] },
+        image: { type: String, default: "" },
+    }
+    ,{ timestamps: true }
+);
 
 export default mongoose.model<IUser>('User', UserSchema);
