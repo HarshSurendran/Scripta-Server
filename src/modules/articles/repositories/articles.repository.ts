@@ -65,33 +65,98 @@ export default class ArticlesRepository {
         }
     };
 
-    getArticles = async (data: string[], userId: string) => {
+    getArticles = async (data: string[], userId: string, skip: number, limit: number) => {
         try {
             const userObjectId = new mongoose.Types.ObjectId(userId)
+            // const articles = await articlesModels.aggregate([
+            //     {
+            //       $lookup: {
+            //         from: "blocklists", 
+            //         localField: "_id",
+            //         foreignField: "articleId",
+            //         let: { userId: userObjectId },
+            //         pipeline: [
+            //           { $match: { $expr: { $eq: ["$userId", "$$userId"] } } }
+            //         ],
+            //         as: "blockedInfo"
+            //       }
+            //     },
+            //     {
+            //       $match: {
+            //         blockedInfo: { $size: 0 } 
+            //       }
+            //     },
+            //     {
+            //         $match: {
+            //           category: { $in: data }, 
+            //           author: { $ne: userObjectId } 
+            //         }
+            //       },
+            //     {
+            //         $lookup: {
+            //             from: "users",
+            //             localField: "author",
+            //             foreignField: "_id",
+            //             as: "author"
+            //         }
+            //     },
+            //     {
+            //         $unwind: "$author"
+            //     },
+            //     {
+            //         $skip: skip
+            //     },
+            //     {
+            //         $limit: limit
+            //     },
+            //     {
+            //       $project: {
+                        
+            //             title: 1,
+            //             description: 1,
+            //             imageurls: 1,
+            //             tags: 1,
+            //             category: 1,
+            //             likes: 1,
+            //             dislikes: 1,
+            //             author: {
+            //                 _id: 1,
+            //                 firstName: 1,
+            //                 lastName: 1,
+            //                 shortName: 1,
+            //                 email: 1,
+            //                 phone: 1,
+            //             },
+            //             likedBy: 1,
+            //             dislikedBy: 1,
+            //             createAt: 1
+            //       }
+            //     }
+            // ]);
+            
+            // return articles;
             const articles = await articlesModels.aggregate([
                 {
-                  $lookup: {
-                    from: "blocklists", 
-                    localField: "_id",
-                    foreignField: "articleId",
-                    let: { userId: userObjectId },
-                    pipeline: [
-                      { $match: { $expr: { $eq: ["$userId", "$$userId"] } } }
-                    ],
-                    as: "blockedInfo"
-                  }
-                },
-                {
-                  $match: {
-                    blockedInfo: { $size: 0 } 
-                  }
+                    $lookup: {
+                        from: "blocklists",
+                        localField: "_id",
+                        foreignField: "articleId",
+                        let: { userId: userObjectId },
+                        pipeline: [{ $match: { $expr: { $eq: ["$userId", "$$userId"] } } }],
+                        as: "blockedInfo"
+                    }
                 },
                 {
                     $match: {
-                      category: { $in: data }, 
-                      author: { $ne: userObjectId } 
+                        blockedInfo: { $size: 0 }
                     }
-                  },
+                },
+                {
+                    $match: {
+                        category: { $in: data },
+                        author: { $ne: userObjectId }
+                    }
+                },
                 {
                     $lookup: {
                         from: "users",
@@ -104,30 +169,45 @@ export default class ArticlesRepository {
                     $unwind: "$author"
                 },
                 {
-                  $project: {
-                        
-                        title: 1,
-                        description: 1,
-                        imageurls: 1,
-                        tags: 1,
-                        category: 1,
-                        likes: 1,
-                        dislikes: 1,
-                        author: {
-                            _id: 1,
-                            firstName: 1,
-                            lastName: 1,
-                            shortName: 1,
-                            email: 1,
-                            phone: 1,
-                        },
-                        likedBy: 1,
-                        dislikedBy: 1,
-                        createAt: 1
-                  }
+                    $facet: {
+                        metadata: [{ $count: "total" }], // Count total articles after filtering
+                        articles: [
+                            { $skip: skip },
+                            { $limit: limit },
+                            {
+                                $project: {
+                                    title: 1,
+                                    description: 1,
+                                    imageurls: 1,
+                                    tags: 1,
+                                    category: 1,
+                                    likes: 1,
+                                    dislikes: 1,
+                                    author: {
+                                        _id: 1,
+                                        firstName: 1,
+                                        lastName: 1,
+                                        shortName: 1,
+                                        email: 1,
+                                        phone: 1,
+                                    },
+                                    likedBy: 1,
+                                    dislikedBy: 1,
+                                    createAt: 1
+                                }
+                            }
+                        ]
+                    }
                 }
             ]);
-            return articles;
+            
+            const total = articles[0].metadata[0]?.total || 0;
+            const result = {
+                totalCount: total,
+                articles: articles[0].articles
+            };
+            console.log(result, "This is the result");
+            return result;
         } catch (error) {
             if (error instanceof Error) {
                 console.error(`Error getting articles: ${error.message}`);

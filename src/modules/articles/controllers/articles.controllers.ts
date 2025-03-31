@@ -47,8 +47,10 @@ export default class ArticlesControllers {
 
   getArticles = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user.id; 
-      const response = await this.ArticlesServices.getArticles(req.body.interestedCategories, userId );
+      const userId = req.user.id;
+      const page = req.query.page ? parseInt(req.query.page as string) : 1;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
+      const response = await this.ArticlesServices.getArticles(req.body.interestedCategories, userId, page, limit );
       return res.status(HttpStatus.OK).json(successResponse("Articles fetched successfully", response));
     } catch (error) {
       next(error);

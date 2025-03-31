@@ -15,9 +15,14 @@ export default class ArticlesServices {
         }
     }
 
-    getArticles = async (data: string[], userId: string) => {
+    getArticles = async (data: string[], userId: string, page: number, limit: number) => {
         try {
-            return await this.ArticlesRepository.getArticles(data, userId);
+            const skip = (page - 1) * limit;
+            const result = await this.ArticlesRepository.getArticles(data, userId, skip, limit);
+            return {
+                ...result,
+                pageLeft: result.totalCount - page * limit
+            }
         } catch (error) {
             throw error;
         }
