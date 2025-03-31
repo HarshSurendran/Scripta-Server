@@ -67,74 +67,7 @@ export default class ArticlesRepository {
 
     getArticles = async (data: string[], userId: string, skip: number, limit: number) => {
         try {
-            const userObjectId = new mongoose.Types.ObjectId(userId)
-            // const articles = await articlesModels.aggregate([
-            //     {
-            //       $lookup: {
-            //         from: "blocklists", 
-            //         localField: "_id",
-            //         foreignField: "articleId",
-            //         let: { userId: userObjectId },
-            //         pipeline: [
-            //           { $match: { $expr: { $eq: ["$userId", "$$userId"] } } }
-            //         ],
-            //         as: "blockedInfo"
-            //       }
-            //     },
-            //     {
-            //       $match: {
-            //         blockedInfo: { $size: 0 } 
-            //       }
-            //     },
-            //     {
-            //         $match: {
-            //           category: { $in: data }, 
-            //           author: { $ne: userObjectId } 
-            //         }
-            //       },
-            //     {
-            //         $lookup: {
-            //             from: "users",
-            //             localField: "author",
-            //             foreignField: "_id",
-            //             as: "author"
-            //         }
-            //     },
-            //     {
-            //         $unwind: "$author"
-            //     },
-            //     {
-            //         $skip: skip
-            //     },
-            //     {
-            //         $limit: limit
-            //     },
-            //     {
-            //       $project: {
-                        
-            //             title: 1,
-            //             description: 1,
-            //             imageurls: 1,
-            //             tags: 1,
-            //             category: 1,
-            //             likes: 1,
-            //             dislikes: 1,
-            //             author: {
-            //                 _id: 1,
-            //                 firstName: 1,
-            //                 lastName: 1,
-            //                 shortName: 1,
-            //                 email: 1,
-            //                 phone: 1,
-            //             },
-            //             likedBy: 1,
-            //             dislikedBy: 1,
-            //             createAt: 1
-            //       }
-            //     }
-            // ]);
-            
-            // return articles;
+            const userObjectId = new mongoose.Types.ObjectId(userId);
             const articles = await articlesModels.aggregate([
                 {
                     $lookup: {
@@ -170,7 +103,7 @@ export default class ArticlesRepository {
                 },
                 {
                     $facet: {
-                        metadata: [{ $count: "total" }], // Count total articles after filtering
+                        metadata: [{ $count: "total" }],
                         articles: [
                             { $skip: skip },
                             { $limit: limit },
@@ -206,7 +139,6 @@ export default class ArticlesRepository {
                 totalCount: total,
                 articles: articles[0].articles
             };
-            console.log(result, "This is the result");
             return result;
         } catch (error) {
             if (error instanceof Error) {
