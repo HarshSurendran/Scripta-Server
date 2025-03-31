@@ -93,7 +93,17 @@ export default class ArticlesControllers {
       const response = await this.ArticlesServices.blockArticle({userId, articleId: req.body.articleId, reason: req.body.reason});
       return res.status(HttpStatus.OK).json(successResponse("Article blocked successfully", response));
     } catch (error) {
-      throw error
+      next(error);
+    }
+  }
+
+  getNoOfBlocks = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+      const response = await this.ArticlesServices.getNoOfBlocks(req.params.id);
+      return res.status(HttpStatus.OK).json(successResponse("Number of blocks fetched successfully", response));
+    } catch (error) {
+      next(error);
     }
   }
 }
+

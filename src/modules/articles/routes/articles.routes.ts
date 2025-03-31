@@ -13,5 +13,6 @@ router.patch('/:id', authenticateJWT, upload.array('images', 5), articlesControl
 router.delete('/:id', authenticateJWT, articlesControllers.deleteArticle);
 router.patch('/userActions/:id', authenticateJWT, articlesControllers.alterUserAction);
 router.post('/block', authenticateJWT, articlesControllers.blockArticle);
+router.get('/noofblocks/:id', authenticateJWT, articlesControllers.getNoOfBlocks);
 
 export default router;

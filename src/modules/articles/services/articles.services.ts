@@ -67,9 +67,15 @@ export default class ArticlesServices {
         try {
             return await this.BlockListRepository.create(data);
         } catch (error) {
-            
+            throw error;
         }
     }
     
-    
+    getNoOfBlocks = async (articleId: string) => {
+        try {
+            return await this.BlockListRepository.getNoOfBlocks(articleId);            
+        } catch (error) {
+            throw error;
+        }
+    }
 }
