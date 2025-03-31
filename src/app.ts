@@ -13,9 +13,9 @@ import UsersRouter from './modules/users/routes/users.routes';
 import CategoriesRouter from './modules/categories/routes/categories.routes';
 
 const app = express();
-
+const frontendUrl = process.env.FRONTEND_URL;
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: frontendUrl,
     methods: 'GET,POST,PUT,DELETE,PATCH',
     credentials: true,
 }));
