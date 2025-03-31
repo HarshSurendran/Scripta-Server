@@ -10,8 +10,12 @@ import TokenServices  from "../modules/auth/services/token.services";
 import CategoriesRepository from "../modules/categories/repositories/categories.repository";
 import CategoriesServices from "../modules/categories/services/categories.services";
 import CategoriesControllers from "../modules/categories/controllers/categories.controllers";
+import BlockListRepository from "../modules/articles/repositories/blockList.repository";
 
 export const container = {
+  //BlockList Dependencies
+  BlockListRepository: new BlockListRepository(),
+
   //Articles Dependencies
   ArticlesRepository: new ArticlesRepository(),
   ArticlesService: null as ArticlesService | null,
@@ -36,7 +40,7 @@ export const container = {
 
 };
 
-container.ArticlesService = new ArticlesService(container.ArticlesRepository);
+container.ArticlesService = new ArticlesService(container.ArticlesRepository, container.BlockListRepository);
 container.ArticlesControllers = new ArticlesControllers(container.ArticlesService);
 
 container.UsersServices = new UsersServices(container.UsersRepository);

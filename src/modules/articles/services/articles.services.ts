@@ -1,10 +1,11 @@
 import { ICreateArticles } from "../dtos/createArticels.dto";
 import ArticlesRepository from "../repositories/articles.repository";
+import BlockListRepository from "../repositories/blockList.repository";
 
 
 
 export default class ArticlesServices {
-    constructor(private ArticlesRepository: ArticlesRepository) { }
+    constructor(private ArticlesRepository: ArticlesRepository, private BlockListRepository: BlockListRepository) { }
 
     createArticle = async (data: ICreateArticles) => {
         try {
@@ -61,6 +62,14 @@ export default class ArticlesServices {
             throw error;
         }
     };
+
+    blockArticle = async (data: { userId: string, articleId: string, reason: string }) => {
+        try {
+            return await this.BlockListRepository.create(data);
+        } catch (error) {
+            
+        }
+    }
     
     
 }

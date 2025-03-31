@@ -86,4 +86,14 @@ export default class ArticlesControllers {
       next(error);
     }
   }
+
+  blockArticle = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user.id;
+      const response = await this.ArticlesServices.blockArticle({userId, articleId: req.body.articleId, reason: req.body.reason});
+      return res.status(HttpStatus.OK).json(successResponse("Article blocked successfully", response));
+    } catch (error) {
+      throw error
+    }
+  }
 }
